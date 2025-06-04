@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { getDatabase, push, ref, set } from "firebase/database";
+import React, { useEffect, useState } from "react";
+import { getDatabase, push, ref, set, onValue } from "firebase/database";
 
 const Home = () => {
   const [task, setTask] = useState("");
   const [taskerror, setTaskerror] = useState("");
+  const [tasklist, setTasklist ] = useState([])
+  const db = getDatabase();
 
   const handleTask = (e) => {
     setTask(e.target.value);
   };
+  //create data
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!task) {
@@ -15,17 +18,31 @@ const Home = () => {
     } else {
       setTaskerror("");
       console.log(task);
-      const db = getDatabase();
-      set(push(ref(db, "todolist/" )), {
-        task:task
-      }).then(()=>{
-        consolelog("data send successfull")
-      }).catch((err)=>{
-        console.log(err)
+      set(push(ref(db, "todolist/")), {
+        task: task,
       })
+        .then(() => {
+          consolelog("data send successfull");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     console.log(task);
   };
+  //read data
+  useEffect(() => {
+    const todolistRef = ref(db, "todolist/");
+    onValue(todolistRef, (snapshot) => {
+      let arr =[]
+      snapshot.forEach((item)=>{
+        arr.push(item.val())
+      })
+      setTasklist(arr)
+    });
+  },[]);
+
+  console.log(tasklist)
   return (
     <div>
       <section className="bg-white dark:bg-gray-900">
@@ -60,6 +77,14 @@ const Home = () => {
               Add product
             </button>
           </form>
+          <ul className="border border-gray-500 p-2 rounded-2xl mt-2.5 shadow-2xl">
+            {tasklist.map((item)=>{
+              return(
+                <li className="mt-2 text-xl">1. {item.name}</li>
+              )
+            })}
+            
+          </ul>
         </div>
       </section>
     </div>
