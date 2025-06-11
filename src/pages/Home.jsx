@@ -83,7 +83,7 @@ const Home = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 font-medium text-4xl text-gray-900 dark:text-white"
                 >
                   Add your Task
                 </label>
@@ -123,14 +123,14 @@ const Home = () => {
             <ol className="border border-gray-500 p-2 rounded-2xl mt-2.5 shadow-2xl">
               {tasklist.map((item, i) => (
                 <li className="mt-2 text-xl flex">
-                  {i + 1} {item.name}
-                  {item.id}{" "}
+                  {i + 1}. {item.name}
+                  {" "}
                   <RiDeleteBin5Fill
                     onClick={() => handleDelete(item.id)}
                     className="text-red-500 ml-5"
                   />
-                  <Link to={`/update/${task.id}`}>
-                    <CiEdit className="text-2xl ml-2" />
+                  <Link to={`/update/${item.id}`}>
+                    <CiEdit className="text-2xl ml-2 font-extrabold" />
                   </Link>
                 </li>
               ))}
